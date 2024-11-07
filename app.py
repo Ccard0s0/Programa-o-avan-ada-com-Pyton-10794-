@@ -1,40 +1,39 @@
-from flask import Flask, render_template
-import logging
+from flask import Flask, render_template, flash, redirect, url_for  # Importar flash, redirect e url_for
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
 
-# Configuração de logging
-logging.basicConfig(level=logging.INFO)
+# Configuração inicial do Flask
 app = Flask(__name__)
+app.config['SECRET_KEY'] = '1234'  # Defina uma chave secreta forte aqui
 
+# Criar um formulário usando Flask-WTF
+class MeuFormulario(FlaskForm):
+    nome = StringField('Nome', validators=[DataRequired()])
+    submit = SubmitField('Enviar')
+
+# Rota principal
 @app.route('/')
-def index():
+def home():
     return render_template('index.html')
 
-@app.route('/administracao_redes_locais')
-def administracao_redes_locais():
-    return render_template('administracao_redes_locais.html')
+# Rota para módulos
+@app.route('/modulos')
+def modulos():
+    return render_template('modulos.html')
 
-@app.route('/processamento_computacional')
-def processamento_computacional():
-    return render_template('processamento_computacional.html')
+# Rota para segurança, onde vamos exibir o formulário
+@app.route('/seguranca', methods=['GET', 'POST'])
+def seguranca():
+    form = MeuFormulario()
+    if form.validate_on_submit():  # Verifica se o formulário foi submetido e validado
+        nome = form.nome.data
+        flash(f"Formulário enviado com sucesso por {nome}!", "success")
+        return render_template('seguranca.html', form=form)
+    elif form.is_submitted() and not form.validate():  # Se o formulário foi submetido mas não validado
+        flash("Erro: Formulário não validado. Verifique os campos e tente novamente.", "error")
 
-@app.route('/c_e_cplusplus')
-def c_e_cplusplus():
-    return render_template('c_e_cplusplus.html')
-
-@app.route('/administracao_de_bd')
-def administracao_de_bd():
-    return render_template('administracao_de_bd.html')
-
-@app.route('/prog_com_java')
-def prog_com_java():
-    return render_template('prog_com_java.html')
-
-@app.route('/prog_com_py')
-def prog_com_py():
-    return render_template('prog_com_py.html')
-
+    return render_template('seguranca.html', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)
-else:
-    app = app  # Isso garante que o Vercel encontre o aplicativo Flask
