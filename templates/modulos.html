@@ -3,7 +3,9 @@
 {% block title %}Módulos{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}">
 <h2>Módulos</h2>
+
 
 <!-- Navegação entre os tópicos usando radio buttons -->
 <div class="tab-container">
@@ -24,6 +26,15 @@
 
     <input type="radio" name="topics" id="topic6">
     <label for="topic6">Python</label>
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+            
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Conteúdo dos tópicos -->
     <div class="tab-content" id="content1">
